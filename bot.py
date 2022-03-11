@@ -7,33 +7,33 @@ count_num = 0
 roles = 0
 
 
-token = '554484948:AAGk7Zbam6MZV_wLXlPhVjHKA5leei316q8'
+token = '5170940542:AAFe0QKhQe76c3NMfrvk5rJo3AeEA7o9orM'
 bot = telebot.TeleBot(token)
 
 
 @bot.message_handler(commands=['start'])
 def start(message):
     keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
-    keyboard.add(*[types.KeyboardButton(choice) for choice in ['Да', 'Нет']])
+    keyboard.add(*[types.KeyboardButton(choice) for choice in ['Hə', 'Yox']])
     ans = bot.send_message(message.chat.id,
-                           "Привет! Ну что, будем в мафию играть?",
+                           "Salam! Yaxşı nə, Mafia oynuyacağıq?",
                            reply_markup=keyboard)
     bot.register_next_step_handler(ans, choicecheck)
 
 
 def choicecheck(message):
-    if message.text == 'Да':
+    if message.text == 'Hə':
         accepted(message)
     else:
         declined(message)
 
 
 def declined(message):
-    bot.send_message(message.chat.id, "Жаль, если что - обращайся, я жду")
+    bot.send_message(message.chat.id, "Heyf, əgər belədirsə - Danış, Mən Gözləyirəm")
 
 
 def accepted(message):
-    ans = bot.send_message(message.chat.id, "Отлично! Что ж, тогда давай определимся, сколько человек будет играть")
+    ans = bot.send_message(message.chat.id, "Sərindir! Yaxşı, sonra qərar verək, Neçə nəfər oynuyacaq?")
     bot.register_next_step_handler(ans, count)
 
 
@@ -44,10 +44,10 @@ def count(message):
     city_count = count_num - mafia_count
     keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     keyboard.add(*[types.KeyboardButton(roles) for roles in
-                   ["Классика: Мафия и Город", "Классика с комиссаром", "Классика с доном",
-                    "Классика с комиссаром и доном"]])
+                   ["Кlassik: Маfiya və şəhər", "Кlassik с комissarlar", "Кlassik və Don",
+                    "Klassik və Komissar və Don"]])
     msg = bot.send_message(message.chat.id,
-                           "Отлично, теперь давай выберем роли",
+                           "Sərindir, İndi isə rolları seçək",
                            reply_markup=keyboard)
     bot.register_next_step_handler(msg, rolescheck)
 
@@ -56,14 +56,14 @@ def rolescheck(message):
     roles = 0
     keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     keyboard.add(*[types.KeyboardButton(finalchoice) for finalchoice in
-                   ["Давай", "Нет, давай выберем другое распределение"]])
-    if message.text == "Классика: Мафия и Город":
+                   ["Давай", "Yox, Başqa paylanmanı seçək"]])
+    if message.text == "Кlassik: Маfiya və Şəhər":
         roles = 1
-    if message.text == "Классика с комиссаром":
+    if message.text == "Классика с комissar":
         roles = 2
-    if message.text == "Классика с доном":
+    if message.text == "Классика с Don":
         roles = 3
-    if message.text == "Классика с комиссаром и доном":
+    if message.text == "Классика с komissar və Don":
         roles = 4
     ans = bot.send_message(message.chat.id,
                            "Предлагаю тебе такой расклад: %s мафий, %s мирных" % (int(mafia_count), count_num - int(mafia_count)),
@@ -73,10 +73,10 @@ def rolescheck(message):
 
 def final_choice(message):
     global count_num, mafia_count, city_count, roles
-    if message.text == "Давай":
+    if message.text == "Davay":
         createtable(message)
     else:
-        msg = bot.send_message(message.chat.id, "Окей, сколько будет мафий?")
+        msg = bot.send_message(message.chat.id, "Окey, Nə qədər mafiya olacaq?")
         bot.register_next_step_handler(msg, specificmafia)
 
 
@@ -117,14 +117,14 @@ def createtable(message):
             city.append(0)
     random.shuffle(city)
     for i in range(count_num):
-        s = "Игрок номер " + str(i+1) + " - "
+        s = "Oyun номер " + str(i+1) + " - "
         if city[i] == 0:
-            bot.send_message(message.chat.id, s + "Мирный житель")
+            bot.send_message(message.chat.id, s + "Mülki")
         elif city[i] == 1:
-            bot.send_message(message.chat.id, s + "Мафия")
+            bot.send_message(message.chat.id, s + "Маfiya")
         elif city[i] == 2:
-            bot.send_message(message.chat.id, s + "Комиссар")
+            bot.send_message(message.chat.id, s + "Комissar")
         elif city[i] == 3:
-            bot.send_message(message.chat.id, s + "Дон")
-    bot.send_message(message.chat.id, "Приятной игры!")
+            bot.send_message(message.chat.id, s + "Don")
+    bot.send_message(message.chat.id, "Oyundan zövq alın!")
 bot.polling()
